@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.yaml
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: centos2
+  name: centos2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: centos2
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.yaml
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/diveintoansiblelabmaster_diveinto.io: "true"
+        io.kompose.service: centos2
+    spec:
+      containers:
+      - image: spurin/diveintoansible:centos
+        imagePullPolicy: ""
+        name: centos2
+        ports:
+        - containerPort: 22
+        - containerPort: 7681
+        resources: {}
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /config
+          name: centos2-claim0
+        - mountPath: /shared
+          name: centos2-claim1
+        - mountPath: /home/ansible
+          name: centos2-claim2
+        - mountPath: /root
+          name: centos2-claim3
+      hostname: centos2
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: centos2-claim0
+        persistentVolumeClaim:
+          claimName: centos2-claim0
+      - name: centos2-claim1
+        persistentVolumeClaim:
+          claimName: centos2-claim1
+      - name: centos2-claim2
+        persistentVolumeClaim:
+          claimName: centos2-claim2
+      - name: centos2-claim3
+        persistentVolumeClaim:
+          claimName: centos2-claim3
+status: {}

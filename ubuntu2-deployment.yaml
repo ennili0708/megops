@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.yaml
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: ubuntu2
+  name: ubuntu2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: ubuntu2
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.yaml
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/diveintoansiblelabmaster_diveinto.io: "true"
+        io.kompose.service: ubuntu2
+    spec:
+      containers:
+      - image: spurin/diveintoansible:ubuntu
+        imagePullPolicy: ""
+        name: ubuntu2
+        ports:
+        - containerPort: 22
+        - containerPort: 7681
+        resources: {}
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /config
+          name: ubuntu2-claim0
+        - mountPath: /shared
+          name: ubuntu2-claim1
+        - mountPath: /home/ansible
+          name: ubuntu2-claim2
+        - mountPath: /root
+          name: ubuntu2-claim3
+      hostname: ubuntu2
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: ubuntu2-claim0
+        persistentVolumeClaim:
+          claimName: ubuntu2-claim0
+      - name: ubuntu2-claim1
+        persistentVolumeClaim:
+          claimName: ubuntu2-claim1
+      - name: ubuntu2-claim2
+        persistentVolumeClaim:
+          claimName: ubuntu2-claim2
+      - name: ubuntu2-claim3
+        persistentVolumeClaim:
+          claimName: ubuntu2-claim3
+status: {}

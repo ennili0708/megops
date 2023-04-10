@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.yaml
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: docker
+  name: docker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: docker
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.yaml
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/diveintoansiblelabmaster_diveinto.io: "true"
+        io.kompose.service: docker
+    spec:
+      containers:
+      - image: spurin/diveintoansible:dind
+        imagePullPolicy: ""
+        name: docker
+        resources: {}
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /shared
+          name: docker-claim0
+      hostname: docker
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: docker-claim0
+        persistentVolumeClaim:
+          claimName: docker-claim0
+status: {}

@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.yaml
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: portal
+  name: portal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: portal
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.yaml
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/diveintoansiblelabmaster_diveinto.io: "true"
+        io.kompose.service: portal
+    spec:
+      containers:
+      - env:
+        - name: NGINX_ENTRYPOINT_QUIET_LOGS
+          value: "1"
+        image: spurin/diveintoansible:portal
+        imagePullPolicy: ""
+        name: portal
+        ports:
+        - containerPort: 80
+        resources: {}
+      hostname: portal
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}

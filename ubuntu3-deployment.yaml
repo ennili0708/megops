@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.yaml
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: ubuntu3
+  name: ubuntu3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: ubuntu3
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.yaml
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/diveintoansiblelabmaster_diveinto.io: "true"
+        io.kompose.service: ubuntu3
+    spec:
+      containers:
+      - image: spurin/diveintoansible:ubuntu
+        imagePullPolicy: ""
+        name: ubuntu3
+        ports:
+        - containerPort: 22
+        - containerPort: 7681
+        resources: {}
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /config
+          name: ubuntu3-claim0
+        - mountPath: /shared
+          name: ubuntu3-claim1
+        - mountPath: /home/ansible
+          name: ubuntu3-claim2
+        - mountPath: /root
+          name: ubuntu3-claim3
+      hostname: ubuntu3
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: ubuntu3-claim0
+        persistentVolumeClaim:
+          claimName: ubuntu3-claim0
+      - name: ubuntu3-claim1
+        persistentVolumeClaim:
+          claimName: ubuntu3-claim1
+      - name: ubuntu3-claim2
+        persistentVolumeClaim:
+          claimName: ubuntu3-claim2
+      - name: ubuntu3-claim3
+        persistentVolumeClaim:
+          claimName: ubuntu3-claim3
+status: {}
